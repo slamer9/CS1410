@@ -16,12 +16,13 @@ class DynArray
    public:
       DynArray(int myCapacity = defaultCapacity);
       ~DynArray();
-      int size();
+      int size() const;
       int capacity();
       void clear();
       void push_back(passedType n);
       passedType pop_back();
       passedType& at(int x);
+      passedType& at(int x) const;
       
       passedType& back();  //New functions for project 13.4
       passedType& front();
@@ -50,7 +51,7 @@ DynArray<passedType>::~DynArray()
 }
 
 template<typename passedType>
-int DynArray<passedType>::size()
+int DynArray<passedType>::size() const
 {
    return this->dSize;
 }
@@ -76,7 +77,7 @@ void DynArray<passedType>::push_back(passedType passedVal)
    if(this->dSize == this->dCapacity)
    {
       int i;
-      this->dCapacity *= 2;                     //why *=?
+      this->dCapacity *= 2;
       passedType* tempPointer = new passedType[this->dCapacity];
       for(i = 0; i < this->dSize; i++)
       {
@@ -109,6 +110,17 @@ passedType& DynArray<passedType>::at(int passedVal)
 }
 
 template<typename passedType>
+passedType& DynArray<passedType>::at(int passedVal) const
+{
+   if(passedVal < 0 || passedVal >= this->dSize)
+   {
+      throw runtime_error("invalid index");
+   } else {
+      return this->data[passedVal];
+   }
+}
+
+template<typename passedType>
 passedType& DynArray<passedType>::back()
 {
     if(this->dCapacity == 0 || this->dSize == 0)
@@ -131,31 +143,29 @@ passedType& DynArray<passedType>::front()
 template<typename passedType>
 DynArray<passedType>::DynArray(const DynArray& passedArray)
 {
-    DynArray newArray = new DynArray();
-    newArray.clear();
+    DynArray* newArray = new DynArray();
+    //newArray->clear();
     int tempSize = passedArray.size();
     for(int i = 0; i < tempSize; i++)
     {
-        newArray.push_back(passedArray.at(i));
+        newArray->push_back(passedArray.at(i));
     }
 }
 
 template<typename passedType>
 DynArray<passedType>& DynArray<passedType>::operator=(const DynArray& passedArray)
 {
-    DynArray newArray = new DynArray();
-    newArray.clear();
+    DynArray* newArray = new DynArray();
+    //newArray.clear();
     int tempSize = passedArray.size();
     for(int i = 0; i < tempSize; i++)
     {
-        newArray.push_back(passedArray.at(i));
+        newArray->push_back(passedArray.at(i));
     }
 }
 
 template<typename passedType>
 passedType& DynArray<passedType>::operator[](int n)
 {
-    passedType* tempPointer1 = nullptr;
-    tempPointer1 = this->at(n);
-    return tempPointer1;
+    return this->at(n);
 }
